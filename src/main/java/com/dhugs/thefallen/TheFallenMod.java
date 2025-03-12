@@ -4,7 +4,7 @@ import net.fabricmc.api.ModInitializer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.dhugs.NoteBlockAPI.Nota;
+import com.dhugs.NoteBlockAPI.NoteBlockAPI;
 import com.dhugs.NoteBlockAPI.model.Song;
 import com.dhugs.NoteBlockAPI.utils.NBSDecoder;
 
@@ -18,7 +18,7 @@ import net.minecraft.entity.Entity;
 public class TheFallenMod implements ModInitializer {
     private static final Logger LOGGER = LogManager.getLogger();
     private static Song theFallenSong;
-    private static Nota notaInstance;
+    private static NoteBlockAPI notaInstance;
     private static final Map<ItemDisplayEntity, Long> activeDisplayEntities = new ConcurrentHashMap<>();
 
     public static Song getTheFallenSong() {
@@ -36,7 +36,7 @@ public class TheFallenMod implements ModInitializer {
     @Override
     public void onInitialize() {
         // Initialize Nota first
-        notaInstance = new Nota();
+        notaInstance = new NoteBlockAPI();
         notaInstance.onInitialize();
         
         // Add server shutdown handler

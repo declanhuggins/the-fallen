@@ -1,6 +1,6 @@
 package com.dhugs.NoteBlockAPI.player;
 
-import com.dhugs.NoteBlockAPI.Nota;
+import com.dhugs.NoteBlockAPI.NoteBlockAPI;
 import com.dhugs.NoteBlockAPI.model.Layer;
 import com.dhugs.NoteBlockAPI.model.Note;
 import com.dhugs.NoteBlockAPI.model.Playlist;
@@ -65,7 +65,7 @@ public class EntitySongPlayer extends RangeSongPlayer {
 			return; // not in same world
 		}
 
-		byte playerVolume = Nota.getPlayerVolume(player);
+		byte playerVolume = NoteBlockAPI.getPlayerVolume(player);
 
 		for(Layer layer : song.getLayerHashMap().values()) {
 			Note note = layer.getNote(tick);

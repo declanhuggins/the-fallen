@@ -16,11 +16,11 @@ import java.util.concurrent.ConcurrentHashMap;
  * Main class, contains methods for playing and adjusting songs for players.
  */
 @SuppressWarnings("unused")
-public class Nota implements ModInitializer {
+public class NoteBlockAPI implements ModInitializer {
 	public static final String MOD_ID = "nota";
 	public static final Logger LOGGER = LoggerFactory.getLogger("Nota");
 
-	private static Nota instance;
+	private static NoteBlockAPI instance;
 	public MinecraftServer server;
 
 	Map<UUID, ArrayList<SongPlayer>> playingSongs = new ConcurrentHashMap<>();
@@ -139,8 +139,8 @@ public class Nota implements ModInitializer {
 		return this.disabling;
 	}
 
-	public static Nota getAPI() {
-		return Nota.instance;
+	public static NoteBlockAPI getAPI() {
+		return NoteBlockAPI.instance;
 	}
 
 	public MinecraftServer getServer() {
@@ -149,8 +149,8 @@ public class Nota implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
-		Nota.instance = this;
-		ServerLifecycleEvents.SERVER_STARTED.register(server -> Nota.getAPI().server = server);
-		ServerLifecycleEvents.SERVER_STOPPING.register(server -> Nota.getAPI().disabling = true);
+		NoteBlockAPI.instance = this;
+		ServerLifecycleEvents.SERVER_STARTED.register(server -> NoteBlockAPI.getAPI().server = server);
+		ServerLifecycleEvents.SERVER_STOPPING.register(server -> NoteBlockAPI.getAPI().disabling = true);
 	}
 }

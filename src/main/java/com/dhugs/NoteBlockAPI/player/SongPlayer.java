@@ -6,7 +6,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.dhugs.NoteBlockAPI.Nota;
+import com.dhugs.NoteBlockAPI.NoteBlockAPI;
 import com.dhugs.NoteBlockAPI.event.SongEndEvent;
 import com.dhugs.NoteBlockAPI.event.SongStartEvent;
 import com.dhugs.NoteBlockAPI.event.SongTickEvent;
@@ -40,7 +40,7 @@ public abstract class SongPlayer {
 
 	protected RepeatMode repeat = RepeatMode.ALL;
 
-	protected Nota api;
+	protected NoteBlockAPI api;
 	protected ChannelMode channelMode = new MonoMode();
 	protected boolean enable10Octave = false;
 
@@ -52,7 +52,7 @@ public abstract class SongPlayer {
 
 	public SongPlayer(Playlist playlist) {
 		this.playlist = playlist;
-		this.api = Nota.getAPI();
+		this.api = NoteBlockAPI.getAPI();
 		this.song = playlist.get(this.currentSongIndex);
 		this.songDelay = song.getDelay() * 50.0f;
 		restartTask((long)this.songDelay);
@@ -80,7 +80,7 @@ public abstract class SongPlayer {
 
 	private void play() {
 		for(UUID uuid : playerList.keySet()) {
-			ServerPlayerEntity player = Nota.getAPI().getServer().getPlayerManager().getPlayer(uuid);
+			ServerPlayerEntity player = NoteBlockAPI.getAPI().getServer().getPlayerManager().getPlayer(uuid);
 			if(player != null) {
 				this.playTick(player, tick);
 			}
@@ -88,7 +88,7 @@ public abstract class SongPlayer {
 	}
 
 	private void onTaskRun(TimerTask task) {
-		if(this.destroyed || Nota.getAPI().isDisabling()) {
+		if(this.destroyed || NoteBlockAPI.getAPI().isDisabling()) {
 			task.cancel();
 		}
 		if(playing) {
@@ -131,7 +131,7 @@ public abstract class SongPlayer {
 			}
 			SongTickEvent.EVENT.invoker().onSongTick(this);
 			for(UUID uuid : playerList.keySet()) {
-				ServerPlayerEntity player = Nota.getAPI().getServer().getPlayerManager().getPlayer(uuid);
+				ServerPlayerEntity player = NoteBlockAPI.getAPI().getServer().getPlayerManager().getPlayer(uuid);
 				if(player != null) {
 					this.playTick(player, tick);
 				}
@@ -195,12 +195,12 @@ public abstract class SongPlayer {
 	public void addPlayer(UUID playerUuid) {
 		if(!this.playerList.containsKey(playerUuid)) {
 			this.playerList.put(playerUuid, false);
-			ArrayList<SongPlayer> songs = Nota.getSongPlayersByPlayer(playerUuid);
+			ArrayList<SongPlayer> songs = NoteBlockAPI.getSongPlayersByPlayer(playerUuid);
 			if(songs == null) {
 				songs = new ArrayList<>();
 			}
 			songs.add(this);
-			Nota.setSongPlayersByPlayer(playerUuid, songs);
+			NoteBlockAPI.setSongPlayersByPlayer(playerUuid, songs);
 		}
 	}
 
@@ -293,13 +293,13 @@ public abstract class SongPlayer {
 	 */
 	public void removePlayer(UUID playerUuid) {
 		playerList.remove(playerUuid);
-		if(Nota.getSongPlayersByPlayer(playerUuid) == null) {
+		if(NoteBlockAPI.getSongPlayersByPlayer(playerUuid) == null) {
 			return;
 		}
 		ArrayList<SongPlayer> songs = new ArrayList<>(
-				Nota.getSongPlayersByPlayer(playerUuid));
+				NoteBlockAPI.getSongPlayersByPlayer(playerUuid));
 		songs.remove(this);
-		Nota.setSongPlayersByPlayer(playerUuid, songs);
+		NoteBlockAPI.setSongPlayersByPlayer(playerUuid, songs);
 		if(this.playerList.isEmpty() && this.autoDestroy) {
 			destroy();
 		}
