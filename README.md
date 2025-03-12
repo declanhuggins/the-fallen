@@ -1,9 +1,11 @@
-# Fabric Example Mod
+# The Fallen
 
-## Setup
+## Description
 
-For setup instructions please see the [fabric documentation page](https://docs.fabricmc.net/develop/getting-started/setting-up-a-development-environment) that relates to the IDE that you are using.
+Plays a custom song and displays player skull when a player dies on the server.
+
+This is based on the song that plays when tributes die in 'The Hunger Games'
 
 ## License
 
-This template is available under the CC0 license. Feel free to learn from it and incorporate it in your own projects.
+This template is available under the MIT license.
