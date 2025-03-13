@@ -1,4 +1,5 @@
 plugins {
+	id "com.modrinth.minotaur" version "2.+"
 	id 'fabric-loom' version '1.10-SNAPSHOT'
 	id 'maven-publish'
 }
@@ -87,4 +88,33 @@ publishing {
 		// The repositories here will be used for publishing your artifact, not for
 		// retrieving dependencies.
 	}
+}
+
+modrinth {
+    // The API token is read from an environment variable for security.
+    token = System.getenv("MODRINTH_TOKEN")
+    
+    // Set your Modrinth project ID or slug.
+    projectId = "the-fallen"
+    
+    // Use the project's version (which you've set to project.mod_version) as the version number.
+    versionNumber = project.version.toString()
+    
+    // Optionally set a version name. Here it prepends a name string to the version.
+    versionName = "The Fallen v${project.version}"
+    
+    // Provide a changelog for this version.
+    changelog = "Automated release of version ${project.version}"
+    
+    // With Fabric Loom, the upload file must be the remapped jar.
+    uploadFile = tasks.remapJar
+    
+    // Specify the supported Minecraft versions. You can use your project's minecraft_version property.
+    gameVersions = [project.minecraft_version]
+    
+    // Specify the mod loader; for Fabric this is simply "fabric".
+    loaders = ["fabric"]
+    
+    // If you want to sync your project's README as the project body on Modrinth, you can do so:
+    syncBodyFrom = file("README.md").text
 }
