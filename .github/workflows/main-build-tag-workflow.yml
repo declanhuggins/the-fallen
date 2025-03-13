@@ -25,11 +25,22 @@ jobs:
       - name: Build Mod
         run: ./gradlew build
 
+      - name: Prepare Main Jar Artifact
+        run: |
+          # Find the main jar (exclude any -sources.jar)
+          MAIN_JAR=$(ls ./build/libs/the-fallen-*.jar | grep -v sources)
+          echo "Main jar found: $MAIN_JAR"
+          mkdir -p artifact
+          cp "$MAIN_JAR" artifact/
+          echo "Artifact folder contents:"
+          ls -al artifact
+        shell: bash
+
       - name: Upload Jar Artifact
         uses: actions/upload-artifact@v4
         with:
           name: the-fallen-jar
-          path: ./build/libs/the-fallen-*.jar
+          path: artifact
 
   tag_release:
     runs-on: ubuntu-latest
