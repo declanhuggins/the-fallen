@@ -107,7 +107,7 @@ modrinth {
     changelog = "Automated release of version ${project.version}"
     
     // With Fabric Loom, the upload file must be the remapped jar.
-    uploadFile = tasks.remapJar
+    uploadFile = tasks.named("remapJar").get()
     
     // Specify the supported Minecraft versions. You can use your project's minecraft_version property.
     gameVersions = [project.minecraft_version]
@@ -117,4 +117,8 @@ modrinth {
     
     // If you want to sync your project's README as the project body on Modrinth, you can do so:
     syncBodyFrom = file("README.md").text
+
+	dependencies {
+        required.project "fabric-api"
+    }
 }
