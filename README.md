@@ -4,7 +4,7 @@
 
 Plays a custom song and displays player skull when a player dies on the server.
 
-This is based on the song that plays when tributes die in 'The Hunger Games'
+This is based on the song that plays when tributes die in 'The Hunger Games'.
 
 ## License
 
