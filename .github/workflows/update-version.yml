@@ -46,4 +46,4 @@ jobs:
           git add gradle.properties
           git commit -m "Bump mod_version to ${{ steps.bump_version.outputs.new_version }} [skip version update]"
           # Use the PAT for pushing
-          git push https://${{ secrets.PUSH_TOKEN }}@github.com/declanhuggins/the-fallen.git HEAD:main
+          git push https://${PAT_TOKEN}@github.com/declanhuggins/the-fallen.git HEAD:main
