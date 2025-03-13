@@ -23,18 +23,14 @@ jobs:
           distribution: temurin
           java-version: 21
 
-      - name: Get Latest Tag and Version
-        id: get_tag
+      - name: Get mod_version and Set Tag
+        id: get_version
         run: |
-          tag=$(git describe --tags --abbrev=0 2>/dev/null)
-          if [ -z "$tag" ]; then
-            tag=$(grep "^mod_version=" gradle.properties | cut -d'=' -f2)
-            tag="v$tag"
-          fi
-          echo "Latest tag: $tag"
-          version=${tag#v}
-          echo "tag=$tag" >> $GITHUB_OUTPUT
+          version=$(grep "^mod_version=" gradle.properties | cut -d'=' -f2)
           echo "version=$version" >> $GITHUB_OUTPUT
+          echo "tag=v$version" >> $GITHUB_OUTPUT
+          echo "Using version: $version"
+          echo "Using tag: v$version"
 
       - name: Create GitHub Release
         id: create_release
@@ -42,8 +38,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ steps.get_tag.outputs.tag }}
-          release_name: "Release ${{ steps.get_tag.outputs.tag }}"
+          tag_name: ${{ steps.get_version.outputs.tag }}
+          release_name: "Release ${{ steps.get_version.outputs.tag }}"
           draft: false
           prerelease: false
 
@@ -53,8 +49,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./build/libs/the-fallen-${{ steps.get_tag.outputs.version }}.jar
-          asset_name: "the-fallen-${{ steps.get_tag.outputs.version }}.jar"
+          asset_path: ./build/libs/the-fallen-${{ steps.get_version.outputs.version }}.jar
+          asset_name: "the-fallen-${{ steps.get_version.outputs.version }}.jar"
           asset_content_type: application/java-archive
 
       - name: Publish to Modrinth via Minotaur
