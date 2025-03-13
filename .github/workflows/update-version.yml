@@ -1,0 +1,47 @@
+name: Update Version
+
+# Run this workflow on pushes to main (but skip if the commit message indicates it's an auto-bump)
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  update-version:
+    runs-on: ubuntu-latest
+    if: ${{ !contains(github.event.head_commit.message, '[skip version update]') }}
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Bump mod_version in gradle.properties
+        id: bump_version
+        run: |
+          # Get the current version from gradle.properties
+          current_version=$(grep "^mod_version=" gradle.properties | cut -d'=' -f2)
+          echo "Current mod_version: $current_version"
+          
+          # Split the version into major.minor.patch (assuming semantic versioning)
+          IFS='.' read -r major minor patch <<< "$current_version"
+          # Increment the patch version. (You can add logic to bump minor/major if needed)
+          new_patch=$((patch + 1))
+          new_version="$major.$minor.$new_patch"
+          echo "New version will be: $new_version"
+          
+          # Update gradle.properties with the new version
+          sed -i "s/^mod_version=.*/mod_version=${new_version}/" gradle.properties
+          
+          echo "Updated gradle.properties:"
+          cat gradle.properties
+          
+          # Export the new version as an output
+          echo "new_version=${new_version}" >> $GITHUB_OUTPUT
+
+      - name: Commit and Push version bump
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git add gradle.properties
+          # Include [skip version update] to avoid re-triggering this workflow
+          git commit -m "Bump mod_version to ${{ steps.bump_version.outputs.new_version }} [skip version update]"
+          git push origin main
