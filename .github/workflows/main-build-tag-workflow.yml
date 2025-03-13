@@ -25,6 +25,12 @@ jobs:
       - name: Build Mod
         run: ./gradlew build
 
+      - name: Upload Jar Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: the-fallen-jar
+          path: ./build/libs/the-fallen-*.jar
+
   tag_release:
     runs-on: ubuntu-latest
     needs: build
