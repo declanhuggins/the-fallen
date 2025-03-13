@@ -36,7 +36,9 @@ jobs:
           git config --global user.email "actions@github.com"
           git add gradle.properties
           git commit -m "Bump mod_version to ${{ steps.bump_version.outputs.new_version }} [skip version update]"
-          git push https://${PAT_TOKEN}@github.com/declanhuggins/the-fallen.git HEAD:main
+          # Reset the remote URL to use the PAT for authentication
+          git remote set-url origin https://${PAT_TOKEN}@github.com/declanhuggins/the-fallen.git
+          git push origin HEAD:main
 
   build:
     runs-on: ubuntu-latest
