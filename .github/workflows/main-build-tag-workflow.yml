@@ -32,11 +32,15 @@ jobs:
       - name: Checkout Code for Tagging
         uses: actions/checkout@v3
 
+      - name: Read mod_version from gradle.properties
+        id: read_version
+        run: |
+          version=$(grep "^mod_version=" gradle.properties | cut -d'=' -f2)
+          echo "version=$version" >> $GITHUB_OUTPUT
+          echo "mod_version: $version"
+          
       - name: Auto Tag Release
         uses: anothrNick/github-tag-action@1.36.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # Let the action determine the new tag based on the commit history.
-          # You can also force a specific tag using CUSTOM_TAG if desired.
-          DEFAULT_BUMP: patch
-          WITH_V: true
+          CUSTOM_TAG: "v${{ steps.read_version.outputs.version }}"
