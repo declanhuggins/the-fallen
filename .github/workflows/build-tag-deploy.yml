@@ -88,9 +88,10 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: the-fallen-jar
+          path: ./downloaded_artifact
 
       - name: List Downloaded Artifacts
-        run: ls -al ./the-fallen-jar
+        run: ls -al ./downloaded_artifact
 
       - name: Create GitHub Release
         id: create_release
@@ -109,7 +110,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./the-fallen-jar/the-fallen-${{ steps.get_version.outputs.version }}.jar
+          asset_path: ./downloaded_artifact/the-fallen-${{ steps.get_version.outputs.version }}.jar
           asset_name: "the-fallen-${{ steps.get_version.outputs.version }}.jar"
           asset_content_type: application/java-archive
 
