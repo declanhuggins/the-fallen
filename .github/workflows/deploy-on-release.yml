@@ -26,10 +26,14 @@ jobs:
       - name: Get Latest Tag and Version
         id: get_tag
         run: |
-          tag=$(git describe --tags --abbrev=0)
+          tag=$(git describe --tags --abbrev=0 2>/dev/null)
+          if [ -z "$tag" ]; then
+            tag=$(grep "^mod_version=" gradle.properties | cut -d'=' -f2)
+            tag="v$tag"
+          fi
           echo "Latest tag: $tag"
-          # Remove a leading "v" if it exists
           version=${tag#v}
+          echo "tag=$tag" >> $GITHUB_OUTPUT
           echo "version=$version" >> $GITHUB_OUTPUT
 
       - name: Create GitHub Release
